@@ -3,6 +3,7 @@ import calendar
 import os
 import platform
 import sys
+import sysconfig
 import urllib.request
 
 from selenium import webdriver
@@ -619,11 +620,23 @@ def login(email, password):
         # options.add_argument("headless")
 
         try:
+            """
+            darwin_(ppc|ppc64|i368|x86_64|arm64)
+            linux_(i686|x86_64|armv7l|aarch64)
+            windows_(x86|x64|arm32|arm64)
+            """
             platform_ = platform.system().lower()
-            if platform_ in ['linux', 'darwin']:
-                driver = webdriver.Chrome(executable_path="./chromedriver", options=options)
+            if platform_ == 'darwin':
+                machine = sysconfig.get_platform().split("-")[-1].lower()
+                if machine=="arm64":
+                    executable_path="./chromedriver_mac_arm64"
+                else:
+                    executable_path="./chromedriver_mac64"
+            elif platform_ == 'linux':
+                executable_path = "./chromedriver"
             else:
-                driver = webdriver.Chrome(executable_path="./chromedriver.exe", options=options)
+                executable_path="./chromedriver.exe"
+            driver = webdriver.Chrome(executable_path, options=options)
         except:
             print("Kindly replace the Chrome Web Driver with the latest one from"
                   "http://chromedriver.chromium.org/downloads"
@@ -655,10 +668,8 @@ def main():
 
     if len(ids) > 0:
         # Getting email and password from user to login into his/her profile
-        # email = input('\nEnter your Facebook Email: ')
-        # password = getpass.getpass('Enter your Facebook Password: ')
-        email = 'abhishekjha007'
-        password = 'Ab#!$#ek1997'
+        email = input('\nEnter your Facebook Email: ')
+        password = getpass.getpass('Enter your Facebook Password: ')
 
         print("\nStarting Scraping...")
 
