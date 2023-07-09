@@ -313,7 +313,6 @@ def scrap_data(id, scan_list, section, elements_path, save_status, file_names):
 
             save_to_file(file_names[0], res, save_status)
             print(file_names, save_status, i)
-
         except Exception as e:
             print("Exception (scrap_data)", str(e))
 
